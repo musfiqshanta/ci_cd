@@ -1,21 +1,48 @@
+name: Flutter CI/CD
+
 on:
-  pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
-name: "Build & Release"
+      
 jobs:
   build:
-    name: Build & Release
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+    runs-on: ubuntu-latest
 
-      - run: flutter build apk --release
-      - run: |
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+      
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+  build_andorid:
+    name: Build Flutter (Android)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+      - name: flutter clean
+        run: flutter clean
+      - name: Build APK
+        run: flutter build apk --split-per-abi
+      - name: Build APK
+        run: |
           flutter build ios --no-codesign
           cd build/ios/iphoneos
           mkdir Payload
@@ -30,7 +57,4 @@ jobs:
           tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
 
-
-
-
-
+        
