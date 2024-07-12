@@ -85,18 +85,15 @@ jobs:
         run: flutter pub get
       - name: flutter clean
         run: flutter clean
-      - name: Build APK
-        run: flutter build apk --split-per-abi
-
-      - name: Clone repository
-        uses: actions/checkout@v4
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - run: flutter pub get
-      - run: flutter clean
-      - run: flutter build ios --release --no-codesign
+      - name: Build Ios
+        run: |
+            flutter build ios --no-codesign
+            cd build/ios/iphoneos
+            mkdir Payload
+            cd Payload
+            ln -s ../Runner.app
+            cd ..
+            zip -r app.ipa Payload
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
