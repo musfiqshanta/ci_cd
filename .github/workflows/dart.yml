@@ -74,10 +74,7 @@ jobs:
           channel: stable
       - name: Install dependencies
         run: flutter pub get
-  build_andorid:
-    name: Build Flutter (Android)
-    runs-on: ubuntu-latest
-    steps:
+
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Set up Flutter
@@ -90,10 +87,7 @@ jobs:
         run: flutter clean
       - name: Build APK
         run: flutter build apk --split-per-abi
-  build_IOS:
-    name: Build Flutter (IOS)
-    runs-on: macos-latest
-    steps:
+
       - name: Clone repository
         uses: actions/checkout@v4
       - name: Set up Flutter
